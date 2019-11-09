@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 
 import { MemberSchema } from './schema/member.schema';
 import { MembersController } from './members.controller';
@@ -14,6 +14,7 @@ import { MembersService } from './members.service';
   ],
   providers: [
     MembersService,
+    { provide: getModelToken('Member'), useValue: MemberSchema },
   ],
 })
 export class MembersModule {}
