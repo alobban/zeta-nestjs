@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member-dto';
@@ -12,6 +12,11 @@ export class MembersController {
   @Get()
   getMembers() {
     return this.membersService.getMembers();
+  }
+
+  @Get('/:id')
+  getMemberById(@Param('id') id: string): Promise<Member> {
+    return this.membersService.getMemberById(id);
   }
 
   @Post()
