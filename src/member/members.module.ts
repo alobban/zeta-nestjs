@@ -14,7 +14,6 @@ import { MembersService } from './members.service';
   ],
   providers: [
     MembersService,
-    { provide: getModelToken('Member'), useValue: MemberSchema },
   ],
 })
 export class MembersModule {}
