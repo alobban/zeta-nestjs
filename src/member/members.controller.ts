@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, NotFoundException, Delete } from '@nestjs/common';
 
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member-dto';
@@ -36,5 +36,15 @@ export class MembersController {
       throw new NotFoundException('Member does not exist!');
     }
     return updatedMember;
+  }
+
+  @Delete('/:id')
+  async deleteMember(
+    @Param('id') id: string,
+  ) {
+    console.log(`id at controller level ${id}`);
+    const deletedMember = await this.membersService.deleteMember(id);
+    console.log(`deleted member at controller level ${JSON.stringify(this.updateMember)}`);
+    return deletedMember;
   }
 }

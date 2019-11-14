@@ -30,4 +30,10 @@ export class MembersService {
     const updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
     return updatedMember;
   }
+
+  async deleteMember(id: string) {
+    const deletedMember = await this.memberModel.findOneAndDelete({_id: id});
+    console.log('deleted member in service', deletedMember);
+    return deletedMember;
+  }
 }

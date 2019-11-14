@@ -22,6 +22,7 @@ describe('MembersService', () => {
             findOne: jest.fn().mockResolvedValue('member'),
             save: jest.fn().mockResolvedValue({ firstName: 'TestUser' }),
             findOneAndUpdate: jest.fn().mockResolvedValue('updatedMember'),
+            findOneAndDelete: jest.fn().mockResolvedValue('deletedMember'),
           },
         },
       ],
@@ -57,6 +58,14 @@ describe('MembersService', () => {
       const result = await membersService.updateMember('id', { firstName: 'TestUser' });
 
       expect(await membersService.updateMember()).toEqual(result);
+    });
+  });
+
+  describe('deleteMember', () => {
+    it('calls membersService.deleteMember and returns the removed member', async () => {
+      const result = await membersService.deleteMember('id');
+
+      expect(membersService.deleteMember()).resolves.toEqual(result);
     });
   });
 });
