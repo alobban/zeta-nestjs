@@ -13,6 +13,7 @@ import { MembersModule } from './member/members.module';
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useFindAndModify: false,
       },
     ),
   ],

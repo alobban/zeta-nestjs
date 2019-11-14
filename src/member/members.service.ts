@@ -25,4 +25,9 @@ export class MembersService {
     const createdMember = new this.memberModel(createMemberDto);
     return await createdMember.save();
   }
+
+  async updateMember(id: string, createMemberDto: CreateMemberDto): Promise<Member> {
+    const updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
+    return updatedMember;
+  }
 }
