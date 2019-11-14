@@ -19,6 +19,9 @@ describe('MembersService', () => {
           useValue: {
             find: jest.fn().mockReturnThis(),
             exec: jest.fn().mockResolvedValue(members),
+            findOne: jest.fn().mockResolvedValue('member'),
+            save: jest.fn().mockResolvedValue({ firstName: 'TestUser' }),
+            findOneAndUpdate: jest.fn().mockResolvedValue('updatedMember'),
           },
         },
       ],
@@ -33,14 +36,27 @@ describe('MembersService', () => {
     });
   });
 
+  describe('getMemberById', () => {
+    it('calls getMemberById and returns a member', async () => {
+      const result = await membersService.getMemberById('id');
+
+      expect(membersService.getMemberById()).resolves.toEqual(result);
+    });
+  });
+
   describe('createMember', () => {
     it('calls membersService.createMember and returns result', async () => {
-      const save = jest.fn().mockResolvedValue(true);
+      const result = await membersService.createMember({ firstName: 'TestUser' });
 
-      expect(save).not.toHaveBeenCalled();
-      const result = await membersService.createMember('newMember');
+      expect(membersService.createMember()).resolves.toEqual(result);
+    });
+  });
 
-      expect(save).toHaveBeenCalled();
+  describe('updateMember', () => {
+    it('calls membersService.updateMember and returns an updated member', async () => {
+      const result = await membersService.updateMember({ firstName: 'TestUser' });
+
+      expect(await membersService.updateMember()).toEqual(result);
     });
   });
 });
