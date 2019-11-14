@@ -28,9 +28,19 @@ describe('MembersService', () => {
   });
 
   describe('getMembers', () => {
-    it('calls getMembers and returns an array of Members', async () => {
-
+    it('calls getMembers and returns an array of Members', () => {
       expect(membersService.getMembers()).resolves.toEqual(members);
+    });
+  });
+
+  describe('createMember', () => {
+    it('calls membersService.createMember and returns result', async () => {
+      const save = jest.fn().mockResolvedValue(true);
+
+      expect(save).not.toHaveBeenCalled();
+      const result = await membersService.createMember('newMember');
+
+      expect(save).toHaveBeenCalled();
     });
   });
 });
