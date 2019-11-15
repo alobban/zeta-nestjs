@@ -7,10 +7,6 @@ import { CreateMemberDto } from './dto/create-member-dto';
 
 @Injectable()
 export class MembersService {
-  members = [
-    { firstName: 'Jake', lastName: 'Miller', lineName: 'State Farm' },
-  ];
-
   constructor(@InjectModel('Member') private readonly memberModel: Model<Member>) {}
 
   async getMembers(): Promise<Member[]> {

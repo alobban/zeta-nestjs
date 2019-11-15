@@ -7,7 +7,7 @@ const members = [
   { firstName: 'Jake', lastName: 'Miller', lineName: 'State Farm' },
 ];
 
-class MemberModel {
+class MockMemberModel {
   constructor(private data) {}
   static find = jest.fn().mockReturnThis();
   static exec = jest.fn().mockResolvedValue(members);
@@ -26,7 +26,7 @@ describe('MembersService', () => {
         MembersService,
         {
           provide: getModelToken('Member'),
-          useValue: MemberModel,
+          useValue: MockMemberModel,
         },
       ],
     }).compile();
