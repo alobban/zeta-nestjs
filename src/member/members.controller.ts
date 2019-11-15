@@ -42,9 +42,7 @@ export class MembersController {
   async deleteMember(
     @Param('id') id: string,
   ) {
-    console.log(`id at controller level ${id}`);
     const deletedMember = await this.membersService.deleteMember(id);
-    console.log(`deleted member at controller level ${JSON.stringify(this.updateMember)}`);
     return deletedMember;
   }
 }

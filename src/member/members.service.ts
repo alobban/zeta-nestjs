@@ -33,7 +33,6 @@ export class MembersService {
 
   async deleteMember(id: string) {
     const deletedMember = await this.memberModel.findOneAndDelete({_id: id});
-    console.log('deleted member in service', deletedMember);
     return deletedMember;
   }
 }
