@@ -7,6 +7,16 @@ const members = [
   { firstName: 'Jake', lastName: 'Miller', lineName: 'State Farm' },
 ];
 
+class MemberModel {
+  constructor(private data) {}
+  static find = jest.fn().mockReturnThis();
+  static exec = jest.fn().mockResolvedValue(members);
+  static findOne = jest.fn().mockResolvedValue('member');
+  save = jest.fn().mockResolvedValue({ firstName: 'TestUser' });
+  static findOneAndUpdate = jest.fn().mockResolvedValue('updatedMember');
+  static findOneAndDelete = jest.fn().mockResolvedValue('deletedMember');
+}
+
 describe('MembersService', () => {
   let membersService;
 
@@ -16,14 +26,7 @@ describe('MembersService', () => {
         MembersService,
         {
           provide: getModelToken('Member'),
-          useValue: {
-            find: jest.fn().mockReturnThis(),
-            exec: jest.fn().mockResolvedValue(members),
-            findOne: jest.fn().mockResolvedValue('member'),
-            save: jest.fn().mockResolvedValue({ firstName: 'TestUser' }),
-            findOneAndUpdate: jest.fn().mockResolvedValue('updatedMember'),
-            findOneAndDelete: jest.fn().mockResolvedValue('deletedMember'),
-          },
+          useValue: MemberModel,
         },
       ],
     }).compile();
@@ -45,7 +48,7 @@ describe('MembersService', () => {
     });
   });
 
-  xdescribe('createMember', () => {
+  describe('createMember', () => {
     it('calls membersService.createMember and returns result', async () => {
       const result = await membersService.createMember({ firstName: 'TestUser' });
 
