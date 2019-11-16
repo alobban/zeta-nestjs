@@ -35,8 +35,10 @@ describe('MembersService', () => {
   });
 
   describe('getMembers', () => {
-    it('calls getMembers and returns an array of Members', () => {
-      expect(membersService.getMembers()).resolves.toEqual(members);
+    it('calls getMembers and returns an array of Members', async () => {
+      const result = await membersService.getMembers();
+
+      expect(membersService.getMembers()).resolves.toEqual(result);
     });
   });
 
