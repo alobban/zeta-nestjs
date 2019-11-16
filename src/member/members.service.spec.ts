@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 
 import { MembersService } from './members.service';
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
 
 const members = [
   { firstName: 'Jake', lastName: 'Miller', lineName: 'State Farm' },
@@ -63,6 +64,14 @@ describe('MembersService', () => {
       const result = await membersService.updateMember('id', { firstName: 'TestUser' });
 
       expect(await membersService.updateMember()).toEqual(result);
+    });
+
+    it('calls membersService.updateMember and throws an Exception when no member exists', async () => {
+      MockMemberModel.findOneAndUpdate = jest.fn().mockResolvedValue(new InternalServerErrorException(`... ObjectId failed ...`));
+
+      const result = await membersService.updateMember('unknownId', { firstName: 'TestUser' });
+      console.log(`result ${result}`);
+      expect(membersService.updateMember()).resolves.toThrow(result[0]);
     });
   });
 

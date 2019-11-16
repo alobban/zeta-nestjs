@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Member } from './member.interface';
@@ -23,8 +23,17 @@ export class MembersService {
   }
 
   async updateMember(id: string, createMemberDto: CreateMemberDto): Promise<Member> {
-    const updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
-    return updatedMember;
+    let updatedMember: Member;
+    try {
+      updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
+      return updatedMember;
+    } catch (error) {
+      if (error.message.includes('ObjectId failed')) {
+        throw new NotFoundException(`Member with id "${id} does not exist!`);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async deleteMember(id: string) {
