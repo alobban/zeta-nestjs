@@ -18,8 +18,8 @@ export class MembersService {
   }
 
   async createMember(createMemberDto: CreateMemberDto): Promise<Member> {
-    const createdMember = new this.memberModel(createMemberDto);
-    return await createdMember.save();
+    const createdMember = this.memberModel.create(createMemberDto);
+    return createdMember;
   }
 
   async updateMember(id: string, createMemberDto: CreateMemberDto): Promise<Member> {
@@ -28,7 +28,7 @@ export class MembersService {
       updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
       return updatedMember;
     } catch (error) {
-      if (error.message.includes('ObjectId failed')) {
+      if (error.message && error.message.includes('ObjectId failed')) {
         throw new NotFoundException(`Member with id "${id} does not exist!`);
       } else {
         throw new InternalServerErrorException();
