@@ -78,12 +78,24 @@ describe('MembersService', () => {
       expect(await membersService.updateMember()).toEqual(result);
     });
 
-    xit('calls membersService.updateMember and throws an Exception when no member exists', async () => {
+    it('calls membersService.updateMember and throws an Exception when no member exists', async () => {
       jest.spyOn(model, 'findOneAndUpdate').mockRejectedValueOnce(new InternalServerErrorException(`... ObjectId failed ...`));
 
-      // const result = await membersService.updateMember('unknownId', { firstName: 'TestUser' });
-      // console.log(`result ${result}`);
-      expect(await membersService.updateMember('unknownId', { firstName: 'TestUser' })).toEqual(InternalServerErrorException);
+      try {
+        await membersService.updateMember('unknownId', { firstName: 'TestUser' });
+      } catch (error) {
+        expect(error.message.message).toContain('Member with id');
+      }
+    });
+
+    it('calls membersService.updateMember and throws an Exception', async () => {
+      jest.spyOn(model, 'findOneAndUpdate').mockRejectedValueOnce(new InternalServerErrorException('error'));
+
+      try {
+        await membersService.updateMember('unknownId', { firstName: 'TestUser' });
+      } catch (error) {
+        expect(error.message.error).toMatch('Internal Server Error');
+      }
     });
   });
 

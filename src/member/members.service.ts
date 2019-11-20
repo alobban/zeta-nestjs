@@ -28,8 +28,8 @@ export class MembersService {
       updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
       return updatedMember;
     } catch (error) {
-      if (error.message && error.message.includes('ObjectId failed')) {
-        throw new NotFoundException(`Member with id "${id} does not exist!`);
+      if (error.message && error.message.message.includes('ObjectId failed')) {
+        throw new NotFoundException(`Member with id "${id}" does not exist!`);
       } else {
         throw new InternalServerErrorException();
       }
