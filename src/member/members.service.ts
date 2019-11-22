@@ -14,7 +14,14 @@ export class MembersService {
   }
 
   async getMemberById(id: string): Promise<Member> {
-    return await this.memberModel.findOne({_id: id});
+    let found: Member;
+    try {
+      found = await this.memberModel.findOne({_id: id});
+      return found;
+    } catch (error) {
+      // console.log(`${id} error: ${JSON.stringify(error)}`, error);
+      throw new NotFoundException(`Member with id "${id}" does not exist!`);
+    }
   }
 
   async createMember(createMemberDto: CreateMemberDto): Promise<Member> {
