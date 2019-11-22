@@ -19,7 +19,6 @@ export class MembersService {
       found = await this.memberModel.findOne({_id: id});
       return found;
     } catch (error) {
-      // console.log(`${id} error: ${JSON.stringify(error)}`, error);
       throw new NotFoundException(`Member with id "${id}" does not exist!`);
     }
   }
