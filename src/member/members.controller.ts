@@ -32,16 +32,13 @@ export class MembersController {
     @Body() createMemberDto: CreateMemberDto,
   ): Promise<Member> {
     const updatedMember = await this.membersService.updateMember(id, createMemberDto);
-    if (!updatedMember) {
-      throw new NotFoundException('Member does not exist!');
-    }
     return updatedMember;
   }
 
   @Delete('/:id')
   async deleteMember(
     @Param('id') id: string,
-  ) {
+  ): Promise<Member> {
     const deletedMember = await this.membersService.deleteMember(id);
     return deletedMember;
   }

@@ -47,7 +47,6 @@ describe('membersController', () => {
     it('should return an Exception when id does not exist', async () => {
       jest.spyOn(service, 'getMemberById').mockRejectedValue(new NotFoundException(`Member with id "unknownId" does not exist!`));
       try {
-        // console.log('hello from "it" in try', await controller.getMemberById('unknownId'));
         await controller.getMemberById('unknownId');
       } catch (error) {
         expect(error.message.message).toContain('Member with id "unknownId"');
@@ -82,7 +81,7 @@ describe('membersController', () => {
       expect(controller.deleteMember('id')).resolves.toEqual('deletedMember');
     });
 
-    xit('calls MembersController.deleteMember with bad ID and returns an NotFoundException', async () => {
+    it('calls MembersController.deleteMember with bad ID and returns an NotFoundException', async () => {
       jest.spyOn(service, 'deleteMember').mockRejectedValue(new NotFoundException(`Member with id "unknownId" does not exist!`));
 
       try {

@@ -15,12 +15,11 @@ export class MembersService {
 
   async getMemberById(id: string): Promise<Member> {
     let found: Member;
-    try {
-      found = await this.memberModel.findOne({_id: id});
-      return found;
-    } catch (error) {
+    found = await this.memberModel.findOne({_id: id});
+    if (!found) {
       throw new NotFoundException(`Member with id "${id}" does not exist!`);
     }
+    return found;
   }
 
   async createMember(createMemberDto: CreateMemberDto): Promise<Member> {
@@ -30,20 +29,18 @@ export class MembersService {
 
   async updateMember(id: string, createMemberDto: CreateMemberDto): Promise<Member> {
     let updatedMember: Member;
-    try {
-      updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
-      return updatedMember;
-    } catch (error) {
-      if (error.message && error.message.message.includes('ObjectId failed')) {
-        throw new NotFoundException(`Member with id "${id}" does not exist!`);
-      } else {
-        throw new InternalServerErrorException();
-      }
+    updatedMember = await this.memberModel.findOneAndUpdate({_id: id}, createMemberDto, {new: true});
+    if (!updatedMember) {
+      throw new NotFoundException(`Member with id "${id}" does not exist!`);
     }
+    return updatedMember;
   }
 
   async deleteMember(id: string) {
     const deletedMember = await this.memberModel.findOneAndDelete({_id: id});
+    if (!deletedMember) {
+      throw new NotFoundException(`Member with id "${id}" does not exist!`);
+    }
     return deletedMember;
   }
 }
