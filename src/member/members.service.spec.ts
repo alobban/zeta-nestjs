@@ -6,6 +6,10 @@ import { Model } from 'mongoose';
 import { MembersService } from './members.service';
 import { Member } from './member.interface';
 
+const mockMember: (Member) => Member = (firstName = 'Harry', lastName = 'Potter', lineName = 'Sorcerer Stone') => {
+  return { firstName, lastName, lineName };
+};
+
 const members = [
   { firstName: 'Jake', lastName: 'Miller', lineName: 'State Farm' },
 ];
@@ -31,7 +35,8 @@ describe('MembersService', () => {
         {
           provide: getModelToken('Member'),
           useValue: {
-            constructor: jest.fn().mockResolvedValue({}),
+            new: jest.fn().mockResolvedValue(mockMember({})),
+            constructor: jest.fn().mockResolvedValue(mockMember({})),
             find: jest.fn().mockReturnThis(),
             exec: jest.fn().mockResolvedValue(members),
             findOne: jest.fn().mockResolvedValue('member'),
@@ -61,6 +66,16 @@ describe('MembersService', () => {
 
       expect(membersService.getMemberById()).resolves.toEqual(result);
     });
+
+    it('calls membersService.getmemberById and throws a NotFound Exception when member does not exist', async () => {
+      jest.spyOn(model, 'findOne').mockResolvedValueOnce(null);
+
+      expect(model.findOne).not.toHaveBeenCalled();
+      const result = membersService.getMemberById('unknownId');
+
+      expect(model.findOne).toHaveBeenCalled();
+      expect(result).rejects.toThrow(NotFoundException);
+    });
   });
 
   describe('createMember', () => {
@@ -78,24 +93,14 @@ describe('MembersService', () => {
       expect(await membersService.updateMember()).toEqual(result);
     });
 
-    it('calls membersService.updateMember and throws an Exception when no member exists', async () => {
-      jest.spyOn(model, 'findOneAndUpdate').mockRejectedValueOnce(new InternalServerErrorException(`... ObjectId failed ...`));
+    it('calls membersService.updateMember and throws an Exception when member does not exists', async () => {
+      jest.spyOn(model, 'findOneAndUpdate').mockResolvedValueOnce(null);
 
-      try {
-        await membersService.updateMember('unknownId', { firstName: 'TestUser' });
-      } catch (error) {
-        expect(error.message.message).toContain('Member with id');
-      }
-    });
+      expect(model.findOneAndUpdate).not.toHaveBeenCalled();
+      const result = membersService.updateMember('unknownId', { firstName: 'TestUser' });
 
-    it('calls membersService.updateMember and throws an Exception', async () => {
-      jest.spyOn(model, 'findOneAndUpdate').mockRejectedValueOnce(new InternalServerErrorException('error'));
-
-      try {
-        await membersService.updateMember('unknownId', { firstName: 'TestUser' });
-      } catch (error) {
-        expect(error.message.error).toMatch('Internal Server Error');
-      }
+      expect(model.findOneAndUpdate).toHaveBeenCalled();
+      expect(result).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -104,6 +109,16 @@ describe('MembersService', () => {
       const result = await membersService.deleteMember('id');
 
       expect(membersService.deleteMember()).resolves.toEqual(result);
+    });
+
+    it('calls membersService.deleteMember and throws an Exception when member does not exist', async () => {
+      jest.spyOn(model, 'findOneAndDelete').mockResolvedValueOnce(null);
+
+      expect(model.findOneAndDelete).not.toHaveBeenCalled();
+      const result = membersService.deleteMember('unknownId');
+
+      expect(model.findOneAndDelete).toHaveBeenCalled();
+      expect(result).rejects.toThrow(NotFoundException);
     });
   });
 });
