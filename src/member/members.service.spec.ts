@@ -67,7 +67,7 @@ describe('MembersService', () => {
       expect(membersService.getMemberById()).resolves.toEqual(result);
     });
 
-    it('calls membersService.getmemberById and throws a NotFound Exception when member does not exist', async () => {
+    it('calls membersService.getmemberById and throws a NotFoundException when member does not exist', async () => {
       jest.spyOn(model, 'findOne').mockResolvedValueOnce(null);
 
       expect(model.findOne).not.toHaveBeenCalled();
@@ -93,7 +93,7 @@ describe('MembersService', () => {
       expect(await membersService.updateMember()).toEqual(result);
     });
 
-    it('calls membersService.updateMember and throws an Exception when member does not exists', async () => {
+    it('calls membersService.updateMember and throws a NotFoundException when member does not exists', async () => {
       jest.spyOn(model, 'findOneAndUpdate').mockResolvedValueOnce(null);
 
       expect(model.findOneAndUpdate).not.toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('MembersService', () => {
       expect(membersService.deleteMember()).resolves.toEqual(result);
     });
 
-    it('calls membersService.deleteMember and throws an Exception when member does not exist', async () => {
+    it('calls membersService.deleteMember and throws a NotFoundException when member does not exist', async () => {
       jest.spyOn(model, 'findOneAndDelete').mockResolvedValueOnce(null);
 
       expect(model.findOneAndDelete).not.toHaveBeenCalled();
